@@ -23,7 +23,7 @@ if (isset($har['log']) && isset($har['log']['entries'])) {
     }
 }
 
-if (!isset($args['d']) && !isset($args['l']) && !isset($args['r'])) {
+if (!isset($args['d']) || !isset($args['l']) || !isset($args['r'])) {
     foreach ($files as $file) {
         echo $file . "\n";
     }
@@ -44,7 +44,13 @@ foreach ($files as $file) {
         @mkdir($dir, 0777, true);
     }
 
-    $content = file_get_contents($url);
+    $content = @file_get_contents($url);
+
+    if ($content === false) {
+        echo $url . ' cannot be reached' . "\n";
+        continue;
+    }
+
     file_put_contents($dst, $content);
     echo 'File ' . $dst . ' Created' . "\n";
 }
